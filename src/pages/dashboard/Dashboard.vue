@@ -50,7 +50,7 @@ import { useBadgeStore } from '../../store/badge'
 import { rechargeApi } from '../../api/recharges'
 import { userApi } from '../../api/users'
 import { transactionApi } from '../../api/transactions'
-import { formatDate } from '../../utils/format'
+import { todayLocal } from '../../utils/format'
 import { flattenMenu } from '../../utils/constants'
 import {
   Sell, User, List, DataLine, Odometer, Money, Setting, Document, DataAnalysis
@@ -85,8 +85,9 @@ export default {
       return '晚上好'
     },
     todayText() {
+      // 问候语用的是本机日期，不是后端时间戳
       const d = new Date()
-      return `${formatDate(d.toISOString())} ${WEEK[d.getDay()]}`
+      return `${todayLocal()} ${WEEK[d.getDay()]}`
     },
     bannerStats() {
       return [
