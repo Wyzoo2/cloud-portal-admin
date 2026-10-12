@@ -1,0 +1,4 @@
+node_modules/
+dist/
+
+# 注意：package-lock.json 必须提交，不要加进 .gitignore
