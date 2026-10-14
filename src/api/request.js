@@ -8,7 +8,7 @@
  *  CSV 等非 JSON 响应（responseType: blob）原样透传
  */
 import axios from 'axios'
-
+import router from '../router'
 export const TOKEN_KEY = 'portal_admin_token'
 export const USER_KEY = 'portal_admin_user'
 
@@ -46,7 +46,8 @@ function refreshOnce() {
 function toLogin() {
   sessionStorage.removeItem(TOKEN_KEY)
   sessionStorage.removeItem(USER_KEY)
-  if (location.pathname !== '/login') location.href = '/login'
+  // if (location.pathname !== '/login') location.href = '/login'
+  if (router.currentRoute.value.path !== '/login') router.push('/login')
 }
 
 request.interceptors.response.use(
