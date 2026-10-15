@@ -14,7 +14,8 @@ import AdminList from '../pages/admins/AdminList.vue'
 import AuditLog from '../pages/audit/AuditLog.vue'
 
 export const router = createRouter({
-  history: createWebHistory(),
+  // base 跟随 vite 的 base（见 src/deploy.config.js）
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     { path: '/login', name: 'login', component: Login, meta: { public: true } },
     {

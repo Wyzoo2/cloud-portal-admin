@@ -8,12 +8,14 @@
  *  CSV 等非 JSON 响应（responseType: blob）原样透传
  */
 import axios from 'axios'
-import router from '../router'
+import { router } from '../router'
+import { API_BASE } from '../deploy.config'
 export const TOKEN_KEY = 'portal_admin_token'
 export const USER_KEY = 'portal_admin_user'
 
 export const request = axios.create({
-  baseURL: '/api',
+  // 前缀由 src/deploy.config.js 的 MOUNTED 切换（/api ↔ /portal/api）
+  baseURL: API_BASE,
   timeout: 30000,
   withCredentials: true
 })
@@ -29,7 +31,7 @@ let refreshing = null
 function refreshOnce() {
   if (!refreshing) {
     refreshing = axios
-      .post('/api/auth/refresh', null, { withCredentials: true, timeout: 30000 })
+      .post(`${API_BASE}/auth/refresh`, null, { withCredentials: true, timeout: 30000 })
       .then(res => {
         const body = res.data
         if (!body || body.code !== 0) throw body || new Error('refresh failed')
