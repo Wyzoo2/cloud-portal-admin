@@ -1,7 +1,4 @@
-/**
- * 主题切换（pinia）：深色 / 浅色
- * 通过给 <html> 加 .dark 类 + Element Plus 暗色变量实现，刷新后保持。
- */
+/** 主题切换：给 <html> 加 .dark 类，刷新后保持 */
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 

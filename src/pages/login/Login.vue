@@ -27,16 +27,18 @@
 </template>
 
 <script>
+import { markRaw } from 'vue'
 import { User, Lock } from '@element-plus/icons-vue'
-import { useAuthStore } from '../../store/auth'
+import { useSessionStore } from '../../store/session'
 import { errorText } from '../../utils/errors'
 
 export default {
   name: 'Login',
   data() {
     return {
-      User,
-      Lock,
+      // 图标是组件对象，必须 markRaw，否则会被 data() 做成响应式（Vue 会告警）
+      User: markRaw(User),
+      Lock: markRaw(Lock),
       year: new Date().getFullYear(),
       form: { username: '', password: '' },
       rules: {
@@ -54,8 +56,8 @@ export default {
       this.loading = true
       this.error = ''
       try {
-        await useAuthStore().login(this.form.username, this.form.password)
-        this.$router.push('/dashboard')
+        const res = await useSessionStore().login(this.form.username, this.form.password)
+        this.$router.push(res.home)
       } catch (e) {
         this.error = errorText(e)
       } finally {

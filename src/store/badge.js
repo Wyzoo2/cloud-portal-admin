@@ -1,8 +1,4 @@
-/**
- * 顶栏角标（待核销充值数）
- * 做成共享状态，核销页操作完能立刻反映到布局的铃铛上；
- * 路由守卫/请求拦截器不依赖它，纯展示用。
- */
+/** 顶栏待核销角标（共享状态，核销页操作后能立刻反映到布局） */
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { rechargeApi } from '../api/recharges'

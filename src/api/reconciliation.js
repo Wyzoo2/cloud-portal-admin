@@ -1,16 +1,4 @@
-/**
- * 日对账（真实接口）
- *   GET  /api/admin/reconciliation/daily?date=      日对账结果（**分产品**，不是扁平差异列表）
- *   POST /api/admin/reconciliation/run             手动触发对账（补跑/排障）
- *   GET  /api/admin/reconciliation/provision-jobs  开通任务队列状态（排障）
- *
- * 真实响应结构（已核对）：
- *   daily → data.list[] = { biz_date, product_code, portal_amount_cents, product_amount_cents,
- *                           diff_cents, diff_count, product_only_count, portal_only_count,
- *                           amount_mismatch_count, status,
- *                           detail: { portal_only: [账单号], product_only: [账单号], amount_mismatch: [账单号] } }
- *   provision-jobs → data.stats = { "0": n, "1": n, "2": n, "3": n }
- */
+/** 日对账：daily 按产品分行返回差异汇总，detail 里是账单号数组 */
 import request from './request'
 
 /** detail 的三类差异（值是账单号字符串数组） */

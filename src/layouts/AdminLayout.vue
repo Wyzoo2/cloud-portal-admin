@@ -74,7 +74,7 @@
           <el-tooltip content="全屏" placement="bottom">
             <el-icon class="action hide-sm" @click="toggleFullscreen"><FullScreen /></el-icon>
           </el-tooltip>
-          <el-tooltip content="待核销充值" placement="bottom">
+          <el-tooltip v-if="hasPerm(PERM.RECHARGE_CONFIRM)" content="待核销充值" placement="bottom">
             <el-badge :value="pending" :hidden="!pending" class="bell">
               <el-icon class="action" @click="$router.push('/recharges')"><Bell /></el-icon>
             </el-badge>
@@ -156,11 +156,11 @@
 </template>
 
 <script>
-import { mapState } from 'pinia'
-import { useAuthStore } from '../store/auth'
+import { mapState, mapActions } from 'pinia'
+import { useSessionStore } from '../store/session'
 import { useThemeStore } from '../store/theme'
 import { useBadgeStore } from '../store/badge'
-import { ADMIN_MENU, flattenMenu } from '../utils/constants'
+import { MENU, PERM, filterMenu, flattenMenu } from '../utils/constants'
 import ChangePasswordDialog from '../components/ChangePasswordDialog.vue'
 import {
   Odometer, Sell, Money, Setting, User, List, DataAnalysis, Document,
@@ -176,7 +176,6 @@ export default {
   components: { Fold, Expand, Moon, Sunny, Close, Search, Refresh, FullScreen, Bell, ArrowDown, Setting, ChangePasswordDialog },
   data() {
     return {
-      menu: ADMIN_MENU,
       drawerOpen: false,
       collapsed: false,
       tabs: [],
@@ -188,14 +187,18 @@ export default {
     }
   },
   setup() {
-    return { theme: useThemeStore() }
+    return { theme: useThemeStore(), PERM }
   },
   computed: {
-    ...mapState(useAuthStore, ['operator']),
+    ...mapState(useSessionStore, ['operator', 'isPlatform']),
     ...mapState(useBadgeStore, ['pending']),
+    /** 菜单按权限点裁剪；企业管理员只会剩下「企业」分组 */
+    menu() {
+      return filterMenu(MENU, p => this.hasPerm(p))
+    },
     searchResults() {
       const k = this.searchText.trim().toLowerCase()
-      const all = flattenMenu()
+      const all = flattenMenu(this.menu)
       if (!k) return all
       return all.filter(m => m.label.toLowerCase().includes(k) || m.path.includes(k))
     }
@@ -206,7 +209,8 @@ export default {
     }
   },
   created() {
-    this.refreshPending()
+    // 待核销角标只有平台管理员有
+    if (this.hasPerm(PERM.RECHARGE_CONFIRM)) this.refreshPending()
     this.addTab(this.$route)
     window.addEventListener('keydown', this.onKeydown)
   },
@@ -214,6 +218,7 @@ export default {
     window.removeEventListener('keydown', this.onKeydown)
   },
   methods: {
+    ...mapActions(useSessionStore, ['hasPerm']),
     iconOf(name) {
       return ICONS[name] || Document
     },
@@ -236,7 +241,7 @@ export default {
     },
     refresh() {
       this.refreshKey++
-      this.refreshPending()
+      if (this.hasPerm(PERM.RECHARGE_CONFIRM)) this.refreshPending()
     },
     toggleFullscreen() {
       if (!document.fullscreenElement) document.documentElement.requestFullscreen()
@@ -275,7 +280,7 @@ export default {
     },
     onCommand(cmd) {
       if (cmd === 'logout') {
-        useAuthStore().logout()
+        useSessionStore().logout()
         this.$router.push('/login')
       } else if (cmd === 'password') {
         this.pwdVisible = true

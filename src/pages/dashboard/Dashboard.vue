@@ -18,7 +18,7 @@
 
     <!-- 统计卡 -->
     <div class="stats">
-      <el-card v-for="s in stats" :key="s.key" class="stat" shadow="never">
+      <el-card v-for="s in cards" :key="s.key" class="stat" shadow="never">
         <div class="stat-top">
           <div class="stat-icon" :style="{ color: s.color }">
             <el-icon :size="20"><component :is="s.icon" /></el-icon>
@@ -44,19 +44,21 @@
 
 <script>
 import { markRaw } from 'vue'
-import { mapState } from 'pinia'
-import { useAuthStore } from '../../store/auth'
+import { mapState, mapActions } from 'pinia'
+import { useSessionStore } from '../../store/session'
 import { useBadgeStore } from '../../store/badge'
 import { rechargeApi } from '../../api/recharges'
 import { userApi } from '../../api/users'
 import { transactionApi } from '../../api/transactions'
-import { todayLocal } from '../../utils/format'
-import { flattenMenu } from '../../utils/constants'
+import { todayLocal, formatTime } from '../../utils/format'
+import { MENU, PERM, ENTERPRISE_STATUS, flattenMenu, filterMenu } from '../../utils/constants'
 import {
-  Sell, User, List, DataLine, Odometer, Money, Setting, Document, DataAnalysis
+  Sell, User, List, DataLine, Odometer, Money, Setting, Document, DataAnalysis, OfficeBuilding
 } from '@element-plus/icons-vue'
 
-const ICONS = { Odometer, Sell, Money, Setting, User, List, DataAnalysis, Document }
+const ICONS = {
+  Odometer, Sell, Money, Setting, User, List, DataAnalysis, Document, OfficeBuilding
+}
 const WEEK = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
 
 export default {
@@ -65,7 +67,8 @@ export default {
   data() {
     return {
       loading: false,
-      stats: [
+      // 平台管理员的统计卡；企业管理员见下方 cards
+      platformStats: [
         { key: 'pending', label: '待核销充值', icon: markRaw(Sell), color: 'var(--warning)', valueColor: 'var(--warning)', value: '-' },
         { key: 'credited', label: '已到账充值', icon: markRaw(DataLine), color: 'var(--success)', valueColor: 'var(--success)', value: '-' },
         { key: 'users', label: '用户总数', icon: markRaw(User), color: 'var(--accent)', valueColor: null, value: '-' },
@@ -74,7 +77,19 @@ export default {
     }
   },
   computed: {
-    ...mapState(useAuthStore, ['operator']),
+    ...mapState(useSessionStore, ['operator', 'isPlatform', 'enterprise']),
+    /** 概览按 scope 分两套：平台看运营数据，企业只看本企业 */
+    cards() {
+      if (this.isPlatform) return this.platformStats
+      const e = this.enterprise || {}
+      const st = ENTERPRISE_STATUS[e.status]
+      return [
+        { key: 'members', label: '企业成员', icon: markRaw(User), color: 'var(--accent)', valueColor: null, value: e.member_count == null ? '-' : e.member_count },
+        { key: 'status', label: '企业状态', icon: markRaw(DataAnalysis), color: 'var(--success)', valueColor: null, value: st ? st.text : '-' },
+        { key: 'expire', label: '到期时间', icon: markRaw(Money), color: 'var(--warning)', valueColor: null, value: e.expire_at ? formatTime(e.expire_at) : '长期' },
+        { key: 'identity', label: '我的身份', icon: markRaw(Setting), color: 'var(--accent)', valueColor: null, value: e.is_owner ? '主管理员' : '管理员' }
+      ]
+    },
     greeting() {
       const h = new Date().getHours()
       if (h < 6) return '凌晨好'
@@ -90,6 +105,13 @@ export default {
       return `${todayLocal()} ${WEEK[d.getDay()]}`
     },
     bannerStats() {
+      if (!this.isPlatform) {
+        return [
+          { label: '企业成员', value: this.valueOf('members') },
+          { label: '企业状态', value: this.valueOf('status') },
+          { label: '到期时间', value: this.valueOf('expire') }
+        ]
+      }
       return [
         { label: '待办核销', value: this.valueOf('pending') },
         { label: '用户数', value: this.valueOf('users') },
@@ -97,18 +119,23 @@ export default {
       ]
     },
     quickNav() {
-      return flattenMenu().map(m => ({ ...m, icon: markRaw(ICONS[m.icon] || Document) }))
+      // 只列当前账号有权限的入口
+      const visible = filterMenu(MENU, p => this.hasPerm(p))
+      return flattenMenu(visible).map(m => ({ ...m, icon: markRaw(ICONS[m.icon] || Document) }))
     }
   },
   created() {
     this.load()
   },
   methods: {
+    ...mapActions(useSessionStore, ['hasPerm']),
     valueOf(key) {
-      const s = this.stats.find(x => x.key === key)
+      const s = this.cards.find(x => x.key === key)
       return s ? s.value : '-'
     },
     async load() {
+      // 企业管理员的数据全部来自会话，不调平台接口
+      if (!this.isPlatform) return
       this.loading = true
       try {
         const badge = useBadgeStore()
@@ -130,7 +157,7 @@ export default {
       }
     },
     setValue(key, v) {
-      const s = this.stats.find(x => x.key === key)
+      const s = this.platformStats.find(x => x.key === key)
       if (s) s.value = v
     }
   }

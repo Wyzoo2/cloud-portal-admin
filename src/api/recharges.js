@@ -1,10 +1,4 @@
-/**
- * 充值核销（真实接口）
- *   GET  /api/admin/recharges?status=&page=&size=   充值核销队列
- *   POST /api/admin/recharges/{id}/confirm          核销到账 / 驳回
- * 经办人由后端从 JWT 取（admin_id 参数已删除），响应里 reviewed_by_username 直接展示。
- * 字段名已对着真实响应逐项核对。
- */
+/** 充值核销 */
 import request from './request'
 
 function normalize(raw) {

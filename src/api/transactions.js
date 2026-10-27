@@ -1,8 +1,4 @@
-/**
- * 交易流水（真实接口）
- *   GET /api/admin/transactions?type=&product_code=&user_id=&keyword=&start_date=&end_date=&page=&size=
- *   GET /api/admin/transactions/export?start_date=&end_date=&limit=&type=&product_code=  → 裸 CSV（带 BOM）
- */
+/** 交易流水（导出为裸 CSV，带 BOM） */
 import request from './request'
 
 function buildParams(o = {}) {

@@ -7,7 +7,7 @@ import { MOUNT_BASE, API_BASE } from './src/deploy.config.js'
 //   1) Authorization 头不会触发 CORS 预检
 //   2) refresh_token 是 SameSite=Strict 的 HttpOnly Cookie，跨站根本不会带上——
 //      走代理同源才能刷新 token，**不要改成直连后端**。
-const API_TARGET = 'http://192.168.9.104'
+const API_TARGET = 'http://192.168.9.105:3000'
 
 console.log(`[vite] ${API_BASE}  →  ${API_TARGET}（base ${MOUNT_BASE}）`)
 

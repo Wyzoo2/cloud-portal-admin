@@ -1,12 +1,5 @@
-/**
- * axios 封装（管理端 · 账号登录版）
- *  鉴权：Authorization: Bearer <access_token>（存 sessionStorage）
- *  过期：1003 → 单例 refresh 后重放原请求
- *  未登录：1002 → 回登录页
- *  无权限：1004 → 只提示，**不跳登录页**（已登录但不是管理员）
- *  刷新：refresh_token 是 HttpOnly Cookie，需 withCredentials
- *  CSV 等非 JSON 响应（responseType: blob）原样透传
- */
+/** axios 封装：1003 单例 refresh 重放，1002 回登录页，1004 只提示不跳转 */
+// refresh_token 是 HttpOnly Cookie，必须 withCredentials（别改成直连后端）
 import axios from 'axios'
 import { router } from '../router'
 import { API_BASE } from '../deploy.config'

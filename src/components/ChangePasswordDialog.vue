@@ -23,7 +23,7 @@
 
 <script>
 import { authApi } from '../api/auth'
-import { useAuthStore } from '../store/auth'
+import { useSessionStore } from '../store/session'
 import { errorText } from '../utils/errors'
 
 export default {
@@ -63,7 +63,7 @@ export default {
         this.$emit('update:modelValue', false)
         this.$message.success('密码已修改，请重新登录')
         // 改密会吊销该账号全部会话（含当前设备）
-        useAuthStore().setSession('', null)
+        useSessionStore().logout()
         this.$router.push('/login')
       } catch (e) {
         this.$message.error(errorText(e))
