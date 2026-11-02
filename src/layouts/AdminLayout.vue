@@ -5,7 +5,7 @@
     <!-- 侧边栏 -->
     <aside class="aside" :class="{ open: drawerOpen, collapsed }">
       <div class="logo" @click="$router.push('/dashboard')">
-        <div class="logo-mark">云</div>
+        <img class="logo-mark" :src="logoUrl" alt="优芽云" />
         <span class="logo-text">云平台门户</span>
       </div>
 
@@ -162,6 +162,7 @@ import { useThemeStore } from '../store/theme'
 import { useBadgeStore } from '../store/badge'
 import { MENU, PERM, filterMenu, flattenMenu } from '../utils/constants'
 import ChangePasswordDialog from '../components/ChangePasswordDialog.vue'
+import logoUrl from '../assets/logo.png'
 import {
   Odometer, Sell, Money, Setting, User, List, DataAnalysis, Document,
   Fold, Expand, Moon, Sunny, Close, Search, Refresh, FullScreen, Bell, ArrowDown
@@ -187,7 +188,7 @@ export default {
     }
   },
   setup() {
-    return { theme: useThemeStore(), PERM }
+    return { theme: useThemeStore(), PERM, logoUrl }
   },
   computed: {
     ...mapState(useSessionStore, ['operator', 'isPlatform']),
@@ -326,14 +327,7 @@ export default {
 .logo-mark {
   width: 28px;
   height: 28px;
-  border-radius: var(--radius-sm);
-  background: var(--accent-gradient);
-  color: #fff;
-  font-size: 14px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
   flex-shrink: 0;
 }
 .logo-text {

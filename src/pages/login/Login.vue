@@ -2,8 +2,8 @@
   <div class="login-page">
     <div class="panel">
       <div class="brand">
-        <div class="mark">云</div>
-        <h1 class="title">云平台统一门户</h1>
+        <img class="mark" :src="logoUrl" alt="优芽云" />
+        <h1 class="title">优芽云平台</h1>
         <p class="sub">管理端</p>
       </div>
 
@@ -22,7 +22,7 @@
       </el-form>
     </div>
 
-    <footer class="foot">© {{ year }} 云平台统一门户 · 管理端</footer>
+    <footer class="foot">© {{ year }} 优芽云平台 · 管理端</footer>
   </div>
 </template>
 
@@ -31,11 +31,13 @@ import { markRaw } from 'vue'
 import { User, Lock } from '@element-plus/icons-vue'
 import { useSessionStore } from '../../store/session'
 import { errorText } from '../../utils/errors'
+import logoUrl from '../../assets/logo.png'
 
 export default {
   name: 'Login',
   data() {
     return {
+      logoUrl,
       // 图标是组件对象，必须 markRaw，否则会被 data() 做成响应式（Vue 会告警）
       User: markRaw(User),
       Lock: markRaw(Lock),
@@ -90,18 +92,12 @@ export default {
   margin-bottom: 32px;
 }
 .mark {
-  width: 52px;
-  height: 52px;
+  width: 56px;
+  height: 56px;
   margin: 0 auto 16px;
-  border-radius: 15px;
-  background: var(--accent-gradient);
-  color: #fff;
-  font-size: 24px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 6px 16px rgba(22, 119, 255, 0.28);
+  display: block;
+  /* 用 drop-shadow 跟随透明轮廓，box-shadow 会投出方块 */
+  filter: drop-shadow(0 5px 12px rgba(29, 59, 214, 0.25));
 }
 .title {
   margin: 0;
