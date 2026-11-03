@@ -9,7 +9,6 @@ export const PERM = {
   TRANSACTION_READ: 'platform.transaction.read',
   RECONCILIATION_READ: 'platform.reconciliation.read',
   AUDIT_READ: 'platform.audit.read',
-  ADMIN_MANAGE: 'platform.admin.manage',
 
   ENT_PROFILE_READ: 'enterprise.profile.read',
   ENT_MEMBER_READ: 'enterprise.member.read',
@@ -26,8 +25,7 @@ export const MENU = [
     children: [
       { path: '/applications', label: '企业审核', permission: PERM.ENTERPRISE_REVIEW },
       { path: '/enterprises', label: '企业管理', permission: PERM.ENTERPRISE_MANAGE },
-      { path: '/recharges', label: '充值核销', permission: PERM.RECHARGE_CONFIRM },
-      { path: '/users', label: '用户管理', permission: PERM.USER_MANAGE }
+      { path: '/recharges', label: '充值核销', permission: PERM.RECHARGE_CONFIRM }
     ]
   },
   {
@@ -42,7 +40,7 @@ export const MENU = [
     label: '系统管理',
     icon: 'Setting',
     children: [
-      { path: '/admins', label: '管理员管理', permission: PERM.ADMIN_MANAGE },
+      { path: '/users', label: '用户管理', permission: PERM.USER_MANAGE },
       { path: '/audit', label: '操作日志', permission: PERM.AUDIT_READ }
     ]
   },
@@ -90,12 +88,6 @@ export const RECHARGE_STATUS = {
 
 // 用户状态：0 正常 · 1 已禁用
 export const USER_STATUS = {
-  0: { text: '正常', type: 'success' },
-  1: { text: '已禁用', type: 'danger' }
-}
-
-// 管理员账号状态（与用户状态同值，单独一份便于文案区分）
-export const ADMIN_STATUS = {
   0: { text: '正常', type: 'success' },
   1: { text: '已禁用', type: 'danger' }
 }

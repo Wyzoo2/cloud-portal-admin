@@ -51,7 +51,7 @@ import { rechargeApi } from '../../api/recharges'
 import { userApi } from '../../api/users'
 import { transactionApi } from '../../api/transactions'
 import { todayLocal, formatTime } from '../../utils/format'
-import { MENU, PERM, ENTERPRISE_STATUS, flattenMenu, filterMenu } from '../../utils/constants'
+import { MENU, ENTERPRISE_STATUS, flattenMenu, filterMenu } from '../../utils/constants'
 import {
   Sell, User, List, DataLine, Odometer, Money, Setting, Document, DataAnalysis, OfficeBuilding
 } from '@element-plus/icons-vue'

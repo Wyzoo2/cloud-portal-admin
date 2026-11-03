@@ -30,11 +30,14 @@ function errorDetail(e) {
   return ''
 }
 
-/** 业务错误 → 展示文案：字段级明细优先，其次错误码文案，最后后端 message */
+/** 这几个是系统类错误，本地文案比后端更友好（后端会返回"未认证或 token 无效"这类技术话） */
+const USE_LOCAL = { 1002: 1, 1003: 1, 5001: 1 }
+
+/** 业务错误 → 展示文案：字段级明细 > 后端 message（更具体，如驳回原因）> 本地映射 */
 export function errorText(e) {
   if (!e) return '请求失败，请稍后重试'
-  if (e.code != null) {
-    return errorDetail(e) || ERROR_MESSAGES[e.code] || e.message || '请求失败，请稍后重试'
-  }
-  return e.message || '请求失败，请稍后重试'
+  const detail = errorDetail(e)
+  if (detail) return detail
+  if (e.message && !USE_LOCAL[e.code]) return e.message
+  return ERROR_MESSAGES[e.code] || e.message || '请求失败，请稍后重试'
 }
