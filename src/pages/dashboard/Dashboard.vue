@@ -120,8 +120,12 @@ export default {
     },
     quickNav() {
       // 只列当前账号有权限的入口
+      // const visible = filterMenu(MENU, p => this.hasPerm(p))
+      // return flattenMenu(visible).map(m => ({ ...m, icon: markRaw(ICONS[m.icon] || Document) }))
       const visible = filterMenu(MENU, p => this.hasPerm(p))
-      return flattenMenu(visible).map(m => ({ ...m, icon: markRaw(ICONS[m.icon] || Document) }))
+      return flattenMenu(visible)
+        .filter(m => m.path && m.path !== '/dashboard')
+        .map(m => ({ ...m, icon: markRaw(ICONS[m.icon] || Document) }))
     }
   },
   created() {
