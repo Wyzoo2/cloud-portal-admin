@@ -63,7 +63,6 @@ const WEEK = ['周日', '周一', '周二', '周三', '周四', '周五', '周�
 
 export default {
   name: 'Dashboard',
-  components: { Sell, User, List, DataLine },
   data() {
     return {
       loading: false,
@@ -119,9 +118,7 @@ export default {
       ]
     },
     quickNav() {
-      // 只列当前账号有权限的入口
-      // const visible = filterMenu(MENU, p => this.hasPerm(p))
-      // return flattenMenu(visible).map(m => ({ ...m, icon: markRaw(ICONS[m.icon] || Document) }))
+      // 只列当前账号有权限的入口；已经在概览页，不再列概览自己
       const visible = filterMenu(MENU, p => this.hasPerm(p))
       return flattenMenu(visible)
         .filter(m => m.path && m.path !== '/dashboard')

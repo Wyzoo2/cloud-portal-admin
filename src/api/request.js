@@ -41,7 +41,8 @@ function refreshOnce() {
 function toLogin() {
   sessionStorage.removeItem(TOKEN_KEY)
   sessionStorage.removeItem(USER_KEY)
-  // if (location.pathname !== '/login') location.href = '/login'
+  // 会话快照也一并清掉，避免残留上一账号的 scope/permissions（键同 store/session.js）
+  sessionStorage.removeItem('portal_admin_session')
   if (router.currentRoute.value.path !== '/login') router.push('/login')
 }
 
