@@ -5,7 +5,7 @@
     <!-- 侧边栏 -->
     <aside class="aside" :class="{ open: drawerOpen, collapsed }">
       <div class="logo" @click="$router.push('/dashboard')">
-        <img class="logo-mark" :src="logoUrl" alt="优芽云" />
+        <img class="logo-mark" :src="logoUrl" alt="云" />
         <span class="logo-text">云平台门户</span>
       </div>
 

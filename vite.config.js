@@ -2,7 +2,7 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { MOUNT_BASE, API_BASE } from './src/deploy.config.js'
 
-// 优芽云平台 · 管理端（内网，端口 5174 避免与用户端 5173 冲突）
+// 云平台 · 管理端（内网，端口 5174 避免与用户端 5173 冲突）
 // 开发代理：/api → 门户后端。前端 baseURL 保持相对路径 '/api'，浏览器视为同源：
 //   1) Authorization 头不会触发 CORS 预检
 //   2) refresh_token 是 SameSite=Strict 的 HttpOnly Cookie，跨站根本不会带上——

@@ -2,8 +2,8 @@
   <div class="login-page">
     <div class="panel">
       <div class="brand">
-        <img class="mark" :src="logoUrl" alt="优芽云" />
-        <h1 class="title">优芽云平台</h1>
+        <img class="mark" :src="logoUrl" alt="云" />
+        <h1 class="title">云平台</h1>
         <p class="sub">管理端</p>
       </div>
 
@@ -22,7 +22,7 @@
       </el-form>
     </div>
 
-    <footer class="foot">© {{ year }} 优芽云平台 · 管理端</footer>
+    <footer class="foot">© {{ year }} 云平台 · 管理端</footer>
   </div>
 </template>
 
